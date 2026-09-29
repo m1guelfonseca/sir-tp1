@@ -1,0 +1,13 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "description": "API simulada com JSON-Server para a Atividade Prática #1 (SIR)",
+  "scripts": {
+    "start": "json-server --watch ../mock-data/bd.json --static ../frontend --port 3000",
+    "reset": "git checkout -- ../mock-data/bd.json"
+  },
+  "dependencies": {
+    "json-server": "0.17.4"
+  },
+  "license": "ISC"
+}
