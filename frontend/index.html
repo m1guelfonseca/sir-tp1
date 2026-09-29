@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alunos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="banner">
+    <header class="pagina topo">
+      <div>
+        <h1>Painel de alunos</h1>
+        <p>Gestão de alunos e cursos</p>
+      </div>
+      <button id="btn-novo" class="btn primario" type="button">+ Novo aluno</button>
+    </header>
+  </div>
+
+  <main class="pagina conteudo">
+    <section class="stats">
+      <article class="card stat">
+        <span class="rotulo">Alunos</span>
+        <strong id="stat-alunos">0</strong>
+      </article>
+      <article class="card stat">
+        <span class="rotulo">Cursos</span>
+        <strong id="stat-cursos">0</strong>
+      </article>
+      <article class="card">
+        <span class="rotulo">Alunos por curso</span>
+        <div id="barras" class="barras"></div>
+      </article>
+    </section>
+
+    <section class="card painel">
+      <div class="ferramentas">
+        <input id="pesquisa" type="search" placeholder="Pesquisar aluno" aria-label="Pesquisar aluno">
+        <select id="filtro-curso" aria-label="Filtrar por curso"></select>
+        <span id="contagem" class="suave" aria-live="polite"></span>
+      </div>
+      <p id="estado" class="estado" role="status" hidden></p>
+      <ul id="lista" class="lista"></ul>
+    </section>
+  </main>
+
+  <!-- Adicionar / editar aluno -->
+  <dialog id="dlg-form" aria-labelledby="form-titulo">
+    <form id="form">
+      <h2 id="form-titulo">Novo aluno</h2>
+
+      <div class="campo">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" autocomplete="off" pattern=".*\S.*" title="Preenche o nome" required>
+      </div>
+
+      <div class="campo">
+        <label for="apelido">Apelido</label>
+        <input id="apelido" name="apelido" type="text" autocomplete="off" pattern=".*\S.*" title="Preenche o apelido" required>
+      </div>
+
+      <div class="campo">
+        <label for="idCurso">Curso</label>
+        <select id="idCurso" name="idCurso" required></select>
+      </div>
+
+      <div class="campo">
+        <label for="anoCurricular">Ano curricular</label>
+        <select id="anoCurricular" name="anoCurricular" required>
+          <option value="1">1.º ano</option>
+          <option value="2">2.º ano</option>
+          <option value="3">3.º ano</option>
+        </select>
+      </div>
+
+      <p id="form-erro" class="erro" role="alert" hidden></p>
+
+      <div class="acoes-dialogo">
+        <button type="button" class="btn" data-fechar>Cancelar</button>
+        <button type="submit" id="btn-guardar" class="btn primario">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Confirmar remoção -->
+  <dialog id="dlg-apagar" aria-labelledby="apagar-titulo">
+    <h2 id="apagar-titulo">Apagar aluno?</h2>
+    <p id="apagar-texto" class="suave"></p>
+    <div class="acoes-dialogo">
+      <button type="button" class="btn" data-fechar>Cancelar</button>
+      <button type="button" id="btn-confirmar-apagar" class="btn perigo">Apagar</button>
+    </div>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

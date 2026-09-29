@@ -1,13 +1,53 @@
 {
   "alunos": [
-    { "id": 1, "nome": "Bob", "apelido": "Gonçalves", "idCurso": 1, "anoCurricular": 3 },
-    { "id": 2, "nome": "Carlos", "apelido": "Carneiro", "idCurso": 1, "anoCurricular": 3 },
-    { "id": 3, "nome": "Francisco", "apelido": "Esteves", "idCurso": 2, "anoCurricular": 3 },
-    { "id": 4, "nome": "Márcio", "apelido": "Antunes", "idCurso": 3, "anoCurricular": 3 }
+    {
+      "id": 1,
+      "nome": "Bob",
+      "apelido": "Gonçalves",
+      "idCurso": 1,
+      "anoCurricular": 3
+    },
+    {
+      "id": 2,
+      "nome": "Carlos",
+      "apelido": "Carneiro",
+      "idCurso": 1,
+      "anoCurricular": 3
+    },
+    {
+      "id": 3,
+      "nome": "Francisco",
+      "apelido": "Esteves",
+      "idCurso": 2,
+      "anoCurricular": 3
+    },
+    {
+      "id": 4,
+      "nome": "Márcio",
+      "apelido": "Antunes",
+      "idCurso": 3,
+      "anoCurricular": 3
+    },
+    {
+      "nome": "teste",
+      "apelido": "urso",
+      "idCurso": 1,
+      "anoCurricular": 1,
+      "id": 5
+    }
   ],
   "cursos": [
-    { "id": 1, "nomeDoCurso": "Engenharia Informática" },
-    { "id": 2, "nomeDoCurso": "Engenharia da Computação Gráfica e Multimédia" },
-    { "id": 3, "nomeDoCurso": "Engenharia de Redes e Sistemas de Computadores" }
+    {
+      "id": 1,
+      "nomeDoCurso": "Engenharia Informática"
+    },
+    {
+      "id": 2,
+      "nomeDoCurso": "Engenharia da Computação Gráfica e Multimédia"
+    },
+    {
+      "id": 3,
+      "nomeDoCurso": "Engenharia de Redes e Sistemas de Computadores"
+    }
   ]
 }
