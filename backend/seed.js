@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const ligarBaseDeDados = require("./config/db");
 const Curso = require("./models/Curso");
 const Aluno = require("./models/Aluno");
-const bd = require("../mock-data/bd.json");
+const dadosOriginais = require("../mock-data/bd.json");
 
-async function migrar() {
+async function migrarDados() {
   await ligarBaseDeDados();
 
   await Aluno.deleteMany();
@@ -15,12 +15,12 @@ async function migrar() {
   // No MongoDB cada curso recebe um _id novo.
   // Guardamos a correspondência "id antigo -> id novo" para ligar os alunos ao curso certo.
   const novoIdDoCurso = {};
-  for (const curso of bd.cursos) {
+  for (const curso of dadosOriginais.cursos) {
     const cursoCriado = await Curso.create({ nomeDoCurso: curso.nomeDoCurso });
     novoIdDoCurso[curso.id] = cursoCriado._id;
   }
 
-  for (const aluno of bd.alunos) {
+  for (const aluno of dadosOriginais.alunos) {
     await Aluno.create({
       nome: aluno.nome,
       apelido: aluno.apelido,
@@ -29,8 +29,8 @@ async function migrar() {
     });
   }
 
-  console.log(`Migrados ${bd.cursos.length} cursos e ${bd.alunos.length} alunos.`);
+  console.log(`Migrados ${dadosOriginais.cursos.length} cursos e ${dadosOriginais.alunos.length} alunos.`);
   await mongoose.disconnect();
 }
 
-migrar();
+migrarDados();

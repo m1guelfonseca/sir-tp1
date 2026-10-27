@@ -9,31 +9,31 @@
 <body>
 
   <header>
-    <div class="pagina topo">
+    <div class="pagina cabecalho">
       <div>
         <h1>Gestão de alunos</h1>
         <p>Ver, adicionar, editar e apagar alunos</p>
       </div>
-      <button id="btn-novo" type="button">+ Novo aluno</button>
+      <button id="btn-novo-aluno" type="button">+ Novo aluno</button>
     </div>
   </header>
 
   <main class="pagina">
-    <div class="ferramentas">
+    <div class="filtros">
       <input id="pesquisa" type="search" placeholder="Pesquisar aluno" aria-label="Pesquisar aluno">
       <select id="filtro-curso" aria-label="Filtrar por curso">
         <option value="">Todos os cursos</option>
       </select>
     </div>
 
-    <p id="estado" class="estado">A carregar alunos…</p>
-    <ul id="lista" class="lista"></ul>
+    <p id="mensagem-lista" class="mensagem-lista">A carregar alunos…</p>
+    <ul id="lista-alunos" class="lista-alunos"></ul>
   </main>
 
   <!-- Formulário para adicionar ou editar um aluno -->
-  <dialog id="dialogo">
-    <form id="form">
-      <h2 id="form-titulo">Novo aluno</h2>
+  <dialog id="dialogo-formulario">
+    <form id="formulario">
+      <h2 id="titulo-formulario">Novo aluno</h2>
 
       <div class="campo">
         <label for="nome">Nome</label>
@@ -61,16 +61,16 @@
         </select>
       </div>
 
-      <p id="form-erro" class="texto-erro" hidden></p>
+      <p id="erro-formulario" class="texto-erro" hidden></p>
 
       <div class="botoes">
         <button id="btn-cancelar" type="button">Cancelar</button>
-        <button type="submit" class="primario">Guardar</button>
+        <button type="submit" class="botao-principal">Guardar</button>
       </div>
     </form>
   </dialog>
 
-  <div id="aviso" role="status" hidden></div>
+  <div id="notificacao" role="status" hidden></div>
 
   <script src="script.js"></script>
 </body>
