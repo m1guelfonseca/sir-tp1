@@ -1,7 +1,7 @@
 const Aluno = require("../models/Aluno");
 
 // Devolver o documento já atualizado e validar os dados também nas atualizações.
-const opcoes = { returnDocument: "after", runValidators: true };
+const opcoesAtualizacao = { returnDocument: "after", runValidators: true };
 
 // GET /alunos
 async function listar(req, res) {
@@ -26,7 +26,7 @@ async function criar(req, res) {
 
 // PUT /alunos/:id — substitui o aluno inteiro
 async function substituir(req, res) {
-  const aluno = await Aluno.findOneAndReplace({ _id: req.params.id }, req.body, opcoes);
+  const aluno = await Aluno.findOneAndReplace({ _id: req.params.id }, req.body, opcoesAtualizacao);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
   }
@@ -35,7 +35,7 @@ async function substituir(req, res) {
 
 // PATCH /alunos/:id — altera só os campos enviados
 async function atualizar(req, res) {
-  const aluno = await Aluno.findByIdAndUpdate(req.params.id, req.body, opcoes);
+  const aluno = await Aluno.findByIdAndUpdate(req.params.id, req.body, opcoesAtualizacao);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
   }

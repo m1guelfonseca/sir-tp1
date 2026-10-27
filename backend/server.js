@@ -3,8 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const ligarBaseDeDados = require("./config/db");
-const alunosRoutes = require("./routes/alunos");
-const cursosRoutes = require("./routes/cursos");
+const rotasAlunos = require("./routes/alunos");
+const rotasCursos = require("./routes/cursos");
 
 const app = express();
 
@@ -12,8 +12,8 @@ app.use(cors()); // permite pedidos de outro domínio (frontend alojado no Rende
 app.use(express.json()); // lê o corpo JSON dos pedidos para req.body
 app.use(express.static(path.join(__dirname, "..", "frontend"))); // serve também o frontend
 
-app.use("/alunos", alunosRoutes);
-app.use("/cursos", cursosRoutes);
+app.use("/alunos", rotasAlunos);
+app.use("/cursos", rotasCursos);
 
 // Qualquer outra rota não existe.
 app.use((req, res) => {
@@ -36,8 +36,8 @@ app.use((erro, req, res, next) => {
   res.status(500).json({ erro: "Erro interno do servidor" });
 });
 
-const PORT = process.env.PORT || 3000;
+const porta = process.env.PORT || 3000;
 
 ligarBaseDeDados().then(() => {
-  app.listen(PORT, () => console.log(`API a correr em http://localhost:${PORT}`));
+  app.listen(porta, () => console.log(`API a correr em http://localhost:${porta}`));
 });
