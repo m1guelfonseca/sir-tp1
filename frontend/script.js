@@ -1,7 +1,7 @@
 // Gestão de alunos: ver, adicionar, editar e apagar alunos através da Fetch API.
 
-// URL base da API. Vazio = mesma origem (o json-server serve este frontend com --static).
-// Na Parte 5, trocar pelo URL da API alojada no Render.
+// URL base da API. Vazio = mesma origem: tanto o json-server (mock-server) como a
+// API Express (backend) servem este frontend. Na Parte 5, trocar pelo URL da API no Render.
 const API = "";
 
 let alunos = [];
@@ -59,8 +59,13 @@ function mostrarAviso(mensagem) {
 
 const nomeCompleto = (aluno) => `${aluno.nome} ${aluno.apelido}`;
 
+// Compara ids como texto: o json-server usa números (1) e o MongoDB usa texto ("665f...").
+const mesmoId = (a, b) => String(a) === String(b);
+
+const procurarCurso = (idCurso) => cursos.find((curso) => mesmoId(curso.id, idCurso));
+
 function nomeDoCurso(idCurso) {
-  const curso = cursos.find((curso) => curso.id === idCurso);
+  const curso = procurarCurso(idCurso);
   return curso ? curso.nomeDoCurso : "Curso desconhecido";
 }
 
@@ -92,12 +97,12 @@ function criarLinha(aluno) {
 // Mostra os alunos que passam na pesquisa por nome e no filtro por curso.
 function desenharLista() {
   const termo = pesquisa.value.trim().toLowerCase();
-  const idCurso = Number(filtroCurso.value); // 0 = todos os cursos
+  const idCurso = filtroCurso.value; // "" = todos os cursos
 
   const visiveis = alunos.filter(
     (aluno) =>
       nomeCompleto(aluno).toLowerCase().includes(termo) &&
-      (idCurso === 0 || aluno.idCurso === idCurso)
+      (idCurso === "" || mesmoId(aluno.idCurso, idCurso))
   );
 
   lista.replaceChildren(...visiveis.map(criarLinha));
@@ -139,7 +144,7 @@ async function guardar(evento) {
   const dados = {
     nome: form.nome.value.trim(),
     apelido: form.apelido.value.trim(),
-    idCurso: Number(form.idCurso.value),
+    idCurso: procurarCurso(form.idCurso.value).id, // o <select> dá texto; assim fica com o tipo de id da API
     anoCurricular: Number(form.anoCurricular.value),
   };
 
@@ -182,10 +187,7 @@ async function iniciar() {
     preencherCursos();
     await carregarAlunos();
   } catch (erro) {
-    mostrarEstado(
-      "Não foi possível contactar a API. Confirma que o servidor está a correr (npm start na pasta mock-server).",
-      true
-    );
+    mostrarEstado("Não foi possível contactar a API. Confirma que o servidor está a correr.", true);
   }
 }
 
