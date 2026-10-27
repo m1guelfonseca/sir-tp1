@@ -1,31 +1,206 @@
 {
 	"info": {
 		"_postman_id": "94e5168c-bdf4-4c00-b873-26a1a9368165",
-		"name": "postman_collection",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "414713"
+		"name": "SIR TP1 - API de alunos",
+		"description": "Testes da API (json-server ou Express). Para trocar de API basta mudar a variável baseUrl.\nCorrer a coleção pela ordem: o pedido 'Criar aluno' guarda o id em alunoId, usado nos pedidos seguintes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:3000" },
+		{ "key": "alunoId", "value": "" }
+	],
 	"item": [
 		{
-			"name": "obter alunos",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/alunos",
-					"host": [
-						"localhost"
+			"name": "Alunos",
+			"item": [
+				{
+					"name": "Listar alunos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Devolve uma lista', () => pm.expect(pm.response.json()).to.be.an('array'));"
+								]
+							}
+						}
 					],
-					"port": "3000",
-					"path": [
-						"alunos"
-					]
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/alunos"
+					}
+				},
+				{
+					"name": "Obter aluno por id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Tem os campos do aluno', () => {",
+									"    pm.expect(pm.response.json()).to.include.keys('nome', 'apelido', 'idCurso', 'anoCurricular');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/alunos/1"
+					}
+				},
+				{
+					"name": "Criar aluno",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 201', () => pm.response.to.have.status(201));",
+									"",
+									"const aluno = pm.response.json();",
+									"pm.test('Devolve o aluno criado', () => pm.expect(aluno.nome).to.eql('Ana'));",
+									"",
+									"// Guarda o id para os pedidos seguintes",
+									"pm.collectionVariables.set('alunoId', aluno.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Ana\",\n  \"apelido\": \"Silva\",\n  \"idCurso\": 1,\n  \"anoCurricular\": 1\n}"
+						},
+						"url": "{{baseUrl}}/alunos"
+					}
+				},
+				{
+					"name": "Atualizar aluno (PUT)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Apelido foi atualizado', () => pm.expect(pm.response.json().apelido).to.eql('Santos'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Ana\",\n  \"apelido\": \"Santos\",\n  \"idCurso\": 2,\n  \"anoCurricular\": 2\n}"
+						},
+						"url": "{{baseUrl}}/alunos/{{alunoId}}"
+					}
+				},
+				{
+					"name": "Atualizar só o ano (PATCH)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Ano foi atualizado', () => pm.expect(pm.response.json().anoCurricular).to.eql(3));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"anoCurricular\": 3\n}"
+						},
+						"url": "{{baseUrl}}/alunos/{{alunoId}}"
+					}
+				},
+				{
+					"name": "Apagar aluno",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200 ou 204', () => pm.expect(pm.response.code).to.be.oneOf([200, 204]));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"url": "{{baseUrl}}/alunos/{{alunoId}}"
+					}
+				},
+				{
+					"name": "Aluno apagado já não existe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 404', () => pm.response.to.have.status(404));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/alunos/{{alunoId}}"
+					}
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Cursos",
+			"item": [
+				{
+					"name": "Listar cursos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Devolve uma lista', () => pm.expect(pm.response.json()).to.be.an('array'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/cursos"
+					}
+				},
+				{
+					"name": "Obter curso por id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Responde 200', () => pm.response.to.have.status(200));",
+									"pm.test('Tem o nome do curso', () => pm.expect(pm.response.json()).to.have.property('nomeDoCurso'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/cursos/1"
+					}
+				}
+			]
 		}
 	]
 }

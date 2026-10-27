@@ -27,13 +27,6 @@
       "apelido": "Antunes",
       "idCurso": 3,
       "anoCurricular": 3
-    },
-    {
-      "nome": "teste",
-      "apelido": "urso",
-      "idCurso": 1,
-      "anoCurricular": 1,
-      "id": 5
     }
   ],
   "cursos": [
