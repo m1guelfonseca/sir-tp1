@@ -5,6 +5,7 @@
   "dependencies": {
     "cors": "2.8.6",
     "express": "5.3.0",
-    "mongoose": "9.11.4"
+    "mongoose": "9.11.4",
+    "swagger-ui-express": "5.0.1"
   }
 }
