@@ -7,7 +7,7 @@ Atividade Prática #1 de SIR: consumo e implementação de APIs RESTful (gestão
 - Aplicação (frontend + API): https://sir-tp1-backend.vercel.app
   - Alunos: https://sir-tp1-backend.vercel.app/alunos
   - Cursos: https://sir-tp1-backend.vercel.app/cursos
-- Documentação da API: _(Parte 6 — por preencher)_
+- Documentação da API (Swagger): https://sir-tp1-backend.vercel.app/api-docs
 
 ## Estrutura
 
@@ -49,7 +49,7 @@ e correr a coleção (ver [tests/README.md](tests/README.md)).
 O frontend e a API ficam no mesmo projeto do Vercel, com o mesmo endereço:
 
 - os ficheiros da pasta `frontend/` são servidos como site (`outputDirectory` no `vercel.json`);
-- os pedidos a `/alunos` e `/cursos` vão para a função `api/index.js`, que usa a app Express do backend;
+- os pedidos a `/alunos`, `/cursos` e `/api-docs` vão para a função `api/index.js`, que usa a app Express do backend;
 - o `package.json` da raiz diz ao Vercel que dependências instalar para a API.
 
 Passos: importar o repositório no Vercel (Framework Preset: Other, Root Directory: `./`) e

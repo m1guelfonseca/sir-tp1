@@ -11,6 +11,7 @@ backend/
 ├── server.js          ← arranca a API no teu computador (npm start)
 ├── seed.js            ← migra mock-data/bd.json para o MongoDB
 ├── config/db.js       ← ligação ao MongoDB
+├── docs/swagger.json  ← documentação da API (aberta em /api-docs)
 ├── models/            ← esquemas mongoose (Aluno, Curso)
 ├── controllers/       ← o que cada endpoint faz
 └── routes/            ← liga cada URL ao controller

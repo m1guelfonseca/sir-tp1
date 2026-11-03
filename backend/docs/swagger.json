@@ -1,0 +1,240 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de Alunos e Cursos",
+    "version": "1.0.0",
+    "description": "API RESTful da Atividade Prática #1 de SIR (Node.js + Express + MongoDB Atlas).\n\nOs erros vêm sempre no formato `{ \"erro\": \"mensagem\" }`."
+  },
+  "servers": [{ "url": "/", "description": "Este servidor" }],
+  "tags": [
+    { "name": "Alunos", "description": "Gestão de alunos" },
+    { "name": "Cursos", "description": "Gestão de cursos" }
+  ],
+  "paths": {
+    "/alunos": {
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Listar todos os alunos",
+        "responses": {
+          "200": {
+            "description": "Lista de alunos",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Aluno" } } } }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Alunos"],
+        "summary": "Criar um aluno",
+        "requestBody": { "$ref": "#/components/requestBodies/DadosAluno" },
+        "responses": {
+          "201": { "$ref": "#/components/responses/AlunoCriado" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" }
+        }
+      }
+    },
+    "/alunos/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Obter um aluno",
+        "responses": {
+          "200": { "$ref": "#/components/responses/Aluno" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Alunos"],
+        "summary": "Editar um aluno (substitui todos os dados)",
+        "requestBody": { "$ref": "#/components/requestBodies/DadosAluno" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Aluno" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "patch": {
+        "tags": ["Alunos"],
+        "summary": "Alterar só alguns campos de um aluno",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DadosAlunoParcial" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Aluno" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Alunos"],
+        "summary": "Apagar um aluno",
+        "responses": {
+          "204": { "description": "Aluno apagado" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      }
+    },
+    "/cursos": {
+      "get": {
+        "tags": ["Cursos"],
+        "summary": "Listar todos os cursos",
+        "responses": {
+          "200": {
+            "description": "Lista de cursos",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Curso" } } } }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cursos"],
+        "summary": "Criar um curso",
+        "requestBody": { "$ref": "#/components/requestBodies/DadosCurso" },
+        "responses": {
+          "201": { "$ref": "#/components/responses/CursoCriado" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" }
+        }
+      }
+    },
+    "/cursos/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": {
+        "tags": ["Cursos"],
+        "summary": "Obter um curso",
+        "responses": {
+          "200": { "$ref": "#/components/responses/Curso" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Cursos"],
+        "summary": "Editar um curso (substitui todos os dados)",
+        "requestBody": { "$ref": "#/components/requestBodies/DadosCurso" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Curso" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "patch": {
+        "tags": ["Cursos"],
+        "summary": "Alterar só alguns campos de um curso",
+        "requestBody": { "$ref": "#/components/requestBodies/DadosCurso" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Curso" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Cursos"],
+        "summary": "Apagar um curso (só se não tiver alunos)",
+        "responses": {
+          "204": { "description": "Curso apagado" },
+          "400": { "$ref": "#/components/responses/DadosInvalidos" },
+          "404": { "$ref": "#/components/responses/NaoEncontrado" },
+          "409": {
+            "description": "O curso tem alunos inscritos",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Erro" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Id do MongoDB",
+        "schema": { "type": "string", "example": "6ae9bad28fd546f142b31aa1" }
+      }
+    },
+    "schemas": {
+      "DadosAluno": {
+        "type": "object",
+        "required": ["nome", "apelido", "idCurso", "anoCurricular"],
+        "properties": {
+          "nome": { "type": "string", "example": "Ana" },
+          "apelido": { "type": "string", "example": "Silva" },
+          "idCurso": { "type": "string", "description": "Id de um curso existente", "example": "6ae9bad28fd546f142b31a9e" },
+          "anoCurricular": { "type": "integer", "minimum": 1, "maximum": 3, "example": 1 }
+        }
+      },
+      "DadosAlunoParcial": {
+        "type": "object",
+        "description": "Qualquer um dos campos do aluno",
+        "properties": {
+          "nome": { "type": "string" },
+          "apelido": { "type": "string" },
+          "idCurso": { "type": "string" },
+          "anoCurricular": { "type": "integer", "minimum": 1, "maximum": 3, "example": 2 }
+        }
+      },
+      "Aluno": {
+        "allOf": [
+          { "type": "object", "properties": { "id": { "type": "string", "example": "6ae9bad28fd546f142b31aa1" } } },
+          { "$ref": "#/components/schemas/DadosAluno" }
+        ]
+      },
+      "DadosCurso": {
+        "type": "object",
+        "required": ["nomeDoCurso"],
+        "properties": {
+          "nomeDoCurso": { "type": "string", "example": "Engenharia Informática" }
+        }
+      },
+      "Curso": {
+        "allOf": [
+          { "type": "object", "properties": { "id": { "type": "string", "example": "6ae9bad28fd546f142b31a9e" } } },
+          { "$ref": "#/components/schemas/DadosCurso" }
+        ]
+      },
+      "Erro": {
+        "type": "object",
+        "properties": {
+          "erro": { "type": "string", "example": "Aluno não encontrado" }
+        }
+      }
+    },
+    "requestBodies": {
+      "DadosAluno": {
+        "required": true,
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DadosAluno" } } }
+      },
+      "DadosCurso": {
+        "required": true,
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DadosCurso" } } }
+      }
+    },
+    "responses": {
+      "Aluno": {
+        "description": "O aluno",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Aluno" } } }
+      },
+      "AlunoCriado": {
+        "description": "Aluno criado",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Aluno" } } }
+      },
+      "Curso": {
+        "description": "O curso",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Curso" } } }
+      },
+      "CursoCriado": {
+        "description": "Curso criado",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Curso" } } }
+      },
+      "DadosInvalidos": {
+        "description": "Dados ou id inválidos",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Erro" } } }
+      },
+      "NaoEncontrado": {
+        "description": "Não encontrado",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Erro" } } }
+      }
+    }
+  }
+}

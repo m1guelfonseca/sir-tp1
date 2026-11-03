@@ -1,9 +1,8 @@
 {
   "outputDirectory": "frontend",
   "rewrites": [
-    { "source": "/alunos", "destination": "/api" },
-    { "source": "/alunos/:id", "destination": "/api" },
-    { "source": "/cursos", "destination": "/api" },
-    { "source": "/cursos/:id", "destination": "/api" }
+    { "source": "/alunos/:caminho*", "destination": "/api" },
+    { "source": "/cursos/:caminho*", "destination": "/api" },
+    { "source": "/api-docs/:caminho*", "destination": "/api" }
   ]
 }
