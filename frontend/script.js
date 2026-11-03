@@ -7,23 +7,23 @@ const API_URL = "";
 
 let alunos = [];
 let cursos = [];
-let alunoEmEdicao = null; // null quando se está a adicionar um aluno novo
+let aluno_em_edicao = null; // null quando se está a adicionar um aluno novo
 
 // Elementos da página
-const listaAlunos = document.querySelector("#lista-alunos");
-const mensagemLista = document.querySelector("#mensagem-lista");
-const campoPesquisa = document.querySelector("#pesquisa");
-const filtroCurso = document.querySelector("#filtro-curso");
-const dialogoFormulario = document.querySelector("#dialogo-formulario");
+const lista_alunos = document.querySelector("#lista-alunos");
+const mensagem_lista = document.querySelector("#mensagem-lista");
+const campo_pesquisa = document.querySelector("#pesquisa");
+const filtro_curso = document.querySelector("#filtro-curso");
+const dialogo_formulario = document.querySelector("#dialogo-formulario");
 const formulario = document.querySelector("#formulario");
-const tituloFormulario = document.querySelector("#titulo-formulario");
-const erroFormulario = document.querySelector("#erro-formulario");
+const titulo_formulario = document.querySelector("#titulo-formulario");
+const erro_formulario = document.querySelector("#erro-formulario");
 const notificacao = document.querySelector("#notificacao");
 
-// ---------- Comunicação com a API ----------
+// ---------- Pedidos à API ----------
 
 // Faz um pedido à API e devolve a resposta em JSON. Lança um erro se o pedido falhar.
-async function chamarApi(caminho, metodo = "GET", dados) {
+async function call_api(caminho, metodo = "GET", dados) {
   const opcoes = { method: metodo };
   if (dados) {
     opcoes.headers = { "Content-Type": "application/json" };
@@ -38,22 +38,39 @@ async function chamarApi(caminho, metodo = "GET", dados) {
   return resposta.status === 204 ? null : resposta.json();
 }
 
-async function carregarAlunos() {
-  alunos = await chamarApi("/alunos");
-  mostrarAlunos();
+async function load_cursos() {
+  cursos = await call_api("/cursos");
+  fill_opcoes_cursos();
+}
+
+async function load_alunos() {
+  alunos = await call_api("/alunos");
+  show_alunos();
+}
+
+function create_aluno(dados_aluno) {
+  return call_api("/alunos", "POST", dados_aluno);
+}
+
+function edit_aluno(id_aluno, dados_aluno) {
+  return call_api(`/alunos/${id_aluno}`, "PUT", dados_aluno);
+}
+
+function delete_aluno(id_aluno) {
+  return call_api(`/alunos/${id_aluno}`, "DELETE");
 }
 
 // ---------- Mensagens ----------
 
 // Mensagem no lugar da lista (a carregar, lista vazia ou erro).
-function mostrarMensagemLista(texto, eErro = false) {
-  mensagemLista.textContent = texto;
-  mensagemLista.classList.toggle("texto-erro", eErro);
-  mensagemLista.hidden = false;
+function show_mensagem_lista(texto, com_erro = false) {
+  mensagem_lista.textContent = texto;
+  mensagem_lista.classList.toggle("texto-erro", com_erro);
+  mensagem_lista.hidden = false;
 }
 
 // Mensagem curta no fundo da página que desaparece sozinha.
-function mostrarNotificacao(texto) {
+function show_notificacao(texto) {
   notificacao.textContent = texto;
   notificacao.hidden = false;
   setTimeout(() => (notificacao.hidden = true), 2500);
@@ -62,28 +79,34 @@ function mostrarNotificacao(texto) {
 // ---------- Cursos ----------
 
 // Compara ids como texto: o json-server usa números (1) e o MongoDB usa texto ("665f...").
-const idsIguais = (id1, id2) => String(id1) === String(id2);
+function is_same_id(id_1, id_2) {
+  return String(id_1) === String(id_2);
+}
 
-const procurarCurso = (idCurso) => cursos.find((curso) => idsIguais(curso.id, idCurso));
+function find_curso(id_curso) {
+  return cursos.find((curso) => is_same_id(curso.id, id_curso));
+}
 
-function nomeDoCurso(idCurso) {
-  const curso = procurarCurso(idCurso);
+function get_nome_curso(id_curso) {
+  const curso = find_curso(id_curso);
   return curso ? curso.nomeDoCurso : "Curso desconhecido";
 }
 
 // Acrescenta os cursos às opções do filtro e do formulário.
-function preencherOpcoesDeCursos() {
+function fill_opcoes_cursos() {
   for (const curso of cursos) {
-    filtroCurso.add(new Option(curso.nomeDoCurso, curso.id));
+    filtro_curso.add(new Option(curso.nomeDoCurso, curso.id));
     formulario.idCurso.add(new Option(curso.nomeDoCurso, curso.id));
   }
 }
 
 // ---------- Lista de alunos ----------
 
-const nomeCompleto = (aluno) => `${aluno.nome} ${aluno.apelido}`;
+function get_nome_completo(aluno) {
+  return `${aluno.nome} ${aluno.apelido}`;
+}
 
-function criarItemAluno(aluno) {
+function create_item_aluno(aluno) {
   const item = document.createElement("li");
   item.className = "aluno";
   item.innerHTML = `
@@ -97,44 +120,44 @@ function criarItemAluno(aluno) {
   `;
 
   // Os dados entram com textContent para que o texto escrito pelo utilizador nunca seja lido como HTML.
-  item.querySelector(".nome").textContent = nomeCompleto(aluno);
-  item.querySelector(".curso").textContent = nomeDoCurso(aluno.idCurso);
+  item.querySelector(".nome").textContent = get_nome_completo(aluno);
+  item.querySelector(".curso").textContent = get_nome_curso(aluno.idCurso);
   item.querySelector(".ano").textContent = `${aluno.anoCurricular}.º ano`;
 
-  const [botaoEditar, botaoApagar] = item.querySelectorAll("button");
-  botaoEditar.addEventListener("click", () => abrirFormulario(aluno));
-  botaoApagar.addEventListener("click", () => apagarAluno(aluno));
+  const [botao_editar, botao_apagar] = item.querySelectorAll("button");
+  botao_editar.addEventListener("click", () => open_formulario(aluno));
+  botao_apagar.addEventListener("click", () => confirm_delete_aluno(aluno));
 
   return item;
 }
 
 // Mostra os alunos que passam na pesquisa por nome e no filtro por curso.
-function mostrarAlunos() {
-  const textoPesquisa = campoPesquisa.value.trim().toLowerCase();
-  const cursoEscolhido = filtroCurso.value; // "" = todos os cursos
+function show_alunos() {
+  const texto_pesquisa = campo_pesquisa.value.trim().toLowerCase();
+  const curso_escolhido = filtro_curso.value; // "" = todos os cursos
 
-  const alunosFiltrados = alunos.filter(
+  const alunos_filtrados = alunos.filter(
     (aluno) =>
-      nomeCompleto(aluno).toLowerCase().includes(textoPesquisa) &&
-      (cursoEscolhido === "" || idsIguais(aluno.idCurso, cursoEscolhido))
+      get_nome_completo(aluno).toLowerCase().includes(texto_pesquisa) &&
+      (curso_escolhido === "" || is_same_id(aluno.idCurso, curso_escolhido))
   );
 
-  listaAlunos.replaceChildren(...alunosFiltrados.map(criarItemAluno));
+  lista_alunos.replaceChildren(...alunos_filtrados.map(create_item_aluno));
 
-  if (alunosFiltrados.length === 0) {
-    mostrarMensagemLista("Nenhum aluno para mostrar.");
+  if (alunos_filtrados.length === 0) {
+    show_mensagem_lista("Nenhum aluno para mostrar.");
   } else {
-    mensagemLista.hidden = true;
+    mensagem_lista.hidden = true;
   }
 }
 
-// ---------- Adicionar e editar ----------
+// ---------- Formulário (adicionar e editar) ----------
 
 // Sem aluno abre o formulário vazio (adicionar); com aluno abre-o preenchido (editar).
-function abrirFormulario(aluno = null) {
-  alunoEmEdicao = aluno;
-  tituloFormulario.textContent = aluno ? "Editar aluno" : "Novo aluno";
-  erroFormulario.hidden = true;
+function open_formulario(aluno = null) {
+  aluno_em_edicao = aluno;
+  titulo_formulario.textContent = aluno ? "Editar aluno" : "Novo aluno";
+  erro_formulario.hidden = true;
 
   const valores = aluno || { nome: "", apelido: "", idCurso: "", anoCurricular: 1 };
   formulario.nome.value = valores.nome;
@@ -142,67 +165,75 @@ function abrirFormulario(aluno = null) {
   formulario.idCurso.value = valores.idCurso;
   formulario.anoCurricular.value = valores.anoCurricular;
 
-  dialogoFormulario.showModal();
+  dialogo_formulario.showModal();
+}
+
+function close_formulario() {
+  dialogo_formulario.close();
+}
+
+// Lê os valores escritos no formulário.
+function get_dados_formulario() {
+  return {
+    nome: formulario.nome.value.trim(),
+    apelido: formulario.apelido.value.trim(),
+    idCurso: find_curso(formulario.idCurso.value).id, // o <select> dá texto; assim fica com o tipo de id da API
+    anoCurricular: Number(formulario.anoCurricular.value),
+  };
 }
 
 // O navegador valida os campos obrigatórios antes de este evento ser disparado.
-async function guardarAluno(evento) {
+async function save_aluno(evento) {
   evento.preventDefault();
-
-  const dadosAluno = {
-    nome: formulario.nome.value.trim(),
-    apelido: formulario.apelido.value.trim(),
-    idCurso: procurarCurso(formulario.idCurso.value).id, // o <select> dá texto; assim fica com o tipo de id da API
-    anoCurricular: Number(formulario.anoCurricular.value),
-  };
+  const dados_aluno = get_dados_formulario();
 
   try {
-    if (alunoEmEdicao) {
-      await chamarApi(`/alunos/${alunoEmEdicao.id}`, "PUT", dadosAluno);
+    if (aluno_em_edicao) {
+      await edit_aluno(aluno_em_edicao.id, dados_aluno);
+      show_notificacao("Aluno atualizado");
     } else {
-      await chamarApi("/alunos", "POST", dadosAluno);
+      await create_aluno(dados_aluno);
+      show_notificacao("Aluno adicionado");
     }
-    dialogoFormulario.close();
-    mostrarNotificacao(alunoEmEdicao ? "Aluno atualizado" : "Aluno adicionado");
-    await carregarAlunos();
+    close_formulario();
+    await load_alunos();
   } catch (erro) {
-    erroFormulario.textContent = `Não foi possível guardar. ${erro.message}`;
-    erroFormulario.hidden = false;
+    erro_formulario.textContent = `Não foi possível guardar. ${erro.message}`;
+    erro_formulario.hidden = false;
   }
 }
 
 // ---------- Apagar ----------
 
-async function apagarAluno(aluno) {
-  if (!confirm(`Apagar ${nomeCompleto(aluno)}?`)) {
+async function confirm_delete_aluno(aluno) {
+  if (!confirm(`Apagar ${get_nome_completo(aluno)}?`)) {
     return;
   }
 
   try {
-    await chamarApi(`/alunos/${aluno.id}`, "DELETE");
-    mostrarNotificacao("Aluno apagado");
-    await carregarAlunos();
+    await delete_aluno(aluno.id);
+    show_notificacao("Aluno apagado");
+    await load_alunos();
   } catch (erro) {
-    mostrarNotificacao(`Não foi possível apagar. ${erro.message}`);
+    show_notificacao(`Não foi possível apagar. ${erro.message}`);
   }
 }
 
 // ---------- Arranque ----------
 
-async function iniciar() {
+async function start_app() {
   try {
-    cursos = await chamarApi("/cursos");
-    preencherOpcoesDeCursos();
-    await carregarAlunos();
+    await load_cursos();
+    await load_alunos();
   } catch (erro) {
-    mostrarMensagemLista("Não foi possível contactar a API. Confirma que o servidor está a correr.", true);
+    show_mensagem_lista("Não foi possível contactar a API. Confirma que o servidor está a correr.", true);
   }
 }
 
-document.querySelector("#btn-novo-aluno").addEventListener("click", () => abrirFormulario());
-document.querySelector("#btn-cancelar").addEventListener("click", () => dialogoFormulario.close());
-formulario.addEventListener("submit", guardarAluno);
-campoPesquisa.addEventListener("input", mostrarAlunos);
-filtroCurso.addEventListener("change", mostrarAlunos);
+document.querySelector("#btn-novo-aluno").addEventListener("click", () => open_formulario());
+document.querySelector("#btn-cancelar").addEventListener("click", close_formulario);
+formulario.addEventListener("submit", save_aluno);
+campo_pesquisa.addEventListener("input", show_alunos);
+filtro_curso.addEventListener("change", show_alunos);
 
-iniciar();
+start_app();

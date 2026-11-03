@@ -1,16 +1,16 @@
 const Aluno = require("../models/Aluno");
 
 // Devolver o documento já atualizado e validar os dados também nas atualizações.
-const opcoesAtualizacao = { returnDocument: "after", runValidators: true };
+const opcoes_atualizacao = { returnDocument: "after", runValidators: true };
 
 // GET /alunos
-async function listar(req, res) {
+async function list_alunos(req, res) {
   const alunos = await Aluno.find();
   res.json(alunos);
 }
 
 // GET /alunos/:id
-async function obter(req, res) {
+async function get_aluno(req, res) {
   const aluno = await Aluno.findById(req.params.id);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
@@ -19,14 +19,14 @@ async function obter(req, res) {
 }
 
 // POST /alunos
-async function criar(req, res) {
+async function create_aluno(req, res) {
   const aluno = await Aluno.create(req.body);
   res.status(201).json(aluno);
 }
 
-// PUT /alunos/:id — substitui o aluno inteiro
-async function substituir(req, res) {
-  const aluno = await Aluno.findOneAndReplace({ _id: req.params.id }, req.body, opcoesAtualizacao);
+// PUT /alunos/:id — substitui todos os dados do aluno
+async function edit_aluno(req, res) {
+  const aluno = await Aluno.findOneAndReplace({ _id: req.params.id }, req.body, opcoes_atualizacao);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
   }
@@ -34,8 +34,8 @@ async function substituir(req, res) {
 }
 
 // PATCH /alunos/:id — altera só os campos enviados
-async function atualizar(req, res) {
-  const aluno = await Aluno.findByIdAndUpdate(req.params.id, req.body, opcoesAtualizacao);
+async function patch_aluno(req, res) {
+  const aluno = await Aluno.findByIdAndUpdate(req.params.id, req.body, opcoes_atualizacao);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
   }
@@ -43,7 +43,7 @@ async function atualizar(req, res) {
 }
 
 // DELETE /alunos/:id
-async function apagar(req, res) {
+async function delete_aluno(req, res) {
   const aluno = await Aluno.findByIdAndDelete(req.params.id);
   if (!aluno) {
     return res.status(404).json({ erro: "Aluno não encontrado" });
@@ -51,4 +51,4 @@ async function apagar(req, res) {
   res.status(204).end();
 }
 
-module.exports = { listar, obter, criar, substituir, atualizar, apagar };
+module.exports = { list_alunos, get_aluno, create_aluno, edit_aluno, patch_aluno, delete_aluno };

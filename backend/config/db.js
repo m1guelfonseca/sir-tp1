@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // Liga ao MongoDB Atlas com a connection string definida no .env (ou no Render).
-async function ligarBaseDeDados() {
+async function connect_base_dados() {
   if (!process.env.MONGODB_URI) {
     console.error("Falta a variável MONGODB_URI. Copia o .env.example para .env e preenche-a.");
     process.exit(1);
@@ -11,4 +11,4 @@ async function ligarBaseDeDados() {
   console.log("Ligado ao MongoDB");
 }
 
-module.exports = ligarBaseDeDados;
+module.exports = connect_base_dados;
