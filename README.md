@@ -4,8 +4,9 @@ Atividade Prática #1 de SIR: consumo e implementação de APIs RESTful (gestão
 
 ## Links
 
-- Frontend: _(Parte 5 — por preencher)_
-- API: _(Parte 5 — por preencher)_
+- Aplicação (frontend + API): _(por preencher depois do deploy no Vercel)_
+  - Alunos: `<url>/alunos`
+  - Cursos: `<url>/cursos`
 - Documentação da API: _(Parte 6 — por preencher)_
 
 ## Estrutura
@@ -17,6 +18,7 @@ Atividade Prática #1 de SIR: consumo e implementação de APIs RESTful (gestão
 | [`tests/`](tests/) | coleção de testes do Postman |
 | [`frontend/`](frontend/) | página web (HTML, CSS e JavaScript com Fetch API) |
 | [`backend/`](backend/) | API real com Node.js, Express e MongoDB Atlas |
+| [`api/`](api/) + [`vercel.json`](vercel.json) + [`package.json`](package.json) | configuração do deploy no Vercel |
 
 ## Como correr
 
@@ -41,3 +43,14 @@ As duas usam a porta 3000 e servem também o frontend em http://localhost:3000.
 
 **Testes** — importar [tests/postman-collection.json](tests/postman-collection.json) no Postman
 e correr a coleção (ver [tests/README.md](tests/README.md)).
+
+## Deploy no Vercel
+
+O frontend e a API ficam no mesmo projeto do Vercel, com o mesmo endereço:
+
+- os ficheiros da pasta `frontend/` são servidos como site (`outputDirectory` no `vercel.json`);
+- os pedidos a `/alunos` e `/cursos` vão para a função `api/index.js`, que usa a app Express do backend;
+- o `package.json` da raiz diz ao Vercel que dependências instalar para a API.
+
+Passos: importar o repositório no Vercel (Framework Preset: Other, Root Directory: `./`) e
+adicionar a variável de ambiente `MONGODB_URI` com a connection string do MongoDB Atlas.

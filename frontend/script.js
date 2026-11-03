@@ -1,8 +1,7 @@
 // Gestão de alunos: ver, adicionar, editar e apagar alunos através da Fetch API.
 
-// Endereço da API. Vazio = o mesmo servidor que serve esta página
-// (tanto o json-server como a API Express servem o frontend).
-// Na Parte 5, trocar pelo endereço da API no Render.
+// Endereço da API. Vazio = o mesmo endereço desta página: o json-server, a API Express
+// e o Vercel servem o frontend e a API juntos, por isso não é preciso mudar.
 const API_URL = "";
 
 let alunos = [];
