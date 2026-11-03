@@ -7,7 +7,8 @@ Tem os mesmos endpoints que o json-server, por isso o frontend funciona com as d
 
 ```
 backend/
-├── server.js          ← cria a app Express, liga as rotas e trata os erros
+├── app.js             ← cria a app Express, liga as rotas e trata os erros
+├── server.js          ← arranca a API no teu computador (npm start)
 ├── seed.js            ← migra mock-data/bd.json para o MongoDB
 ├── config/db.js       ← ligação ao MongoDB
 ├── models/            ← esquemas mongoose (Aluno, Curso)
@@ -32,6 +33,9 @@ npm start
 ```
 
 A API fica em http://localhost:3000 e o frontend também é servido no mesmo endereço.
+
+No Vercel, em vez do `server.js`, é usado o [`api/index.js`](../api/index.js) da raiz do projeto
+(ver o README principal).
 
 ## Endpoints
 
