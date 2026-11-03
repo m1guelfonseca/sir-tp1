@@ -4,9 +4,9 @@ Atividade Prática #1 de SIR: consumo e implementação de APIs RESTful (gestão
 
 ## Links
 
-- Aplicação (frontend + API): _(por preencher depois do deploy no Vercel)_
-  - Alunos: `<url>/alunos`
-  - Cursos: `<url>/cursos`
+- Aplicação (frontend + API): https://sir-tp1-backend.vercel.app
+  - Alunos: https://sir-tp1-backend.vercel.app/alunos
+  - Cursos: https://sir-tp1-backend.vercel.app/cursos
 - Documentação da API: _(Parte 6 — por preencher)_
 
 ## Estrutura
