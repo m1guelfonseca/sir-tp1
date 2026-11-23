@@ -1,7 +1,10 @@
 {
   "name": "sir-tp1",
   "private": true,
-  "description": "Usado só pelo Vercel para instalar as dependências da API (as mesmas do backend/package.json).",
+  "description": "Usado pelo Vercel para instalar as dependências da API e compilar o frontend Svelte.",
+  "scripts": {
+    "build": "npm --prefix frontend-svelte install && npm --prefix frontend-svelte run build"
+  },
   "dependencies": {
     "cors": "2.8.6",
     "express": "5.3.0",

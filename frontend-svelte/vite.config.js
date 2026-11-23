@@ -11,4 +11,8 @@ export default defineConfig({
       '/cursos': 'http://localhost:3000',
     },
   },
+  build: {
+    outDir: '../frontend',
+    emptyOutDir: true,
+  },
 })
